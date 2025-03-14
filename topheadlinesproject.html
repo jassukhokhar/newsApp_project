@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .news-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .news-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+        .news-item h2 {
+            font-size: 20px;
+            margin: 0;
+        }
+        .news-item p {
+            font-size: 14px;
+            color: #555;
+        }
+        .news-item a {
+            color: blue;
+            text-decoration: none;
+        }
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .buttons button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .buttons button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Top News</h1>
+        <div class="buttons">
+            <button onclick="fetchNews('us')">News from US</button>
+            <button onclick="fetchNews('bbc-news')">News from BBC</button>
+            <button onclick="fetchNews('india')">News from India</button>
+            <button onclick="fetchNews('elon-musk')">News about Elon Musk</button>
+            <button onclick="fetchNews('donald-trump')">News about Donald Trump</button>
+            <button onclick="fetchNews('cnn')">News from CNN</button>
+            <button onclick="fetchNews('al-jazeera-english')">News from Al Jazeera</button>
+            <button onclick="fetchNews('world')">World News</button>
+        </div>
+        <div id="news" class="news-container"></div>
+    </div>
+
+    <script>
+        async function fetchNews(query) {
+            const apiKey = "2c331f82d3724d7ba80c79fda6bebe3d";
+            let url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                displayNews(data.articles);
+            } catch (error) {
+                console.error("Error fetching news:", error);
+            }
+        }
+
+        function displayNews(articles) {
+            const newsContainer = document.getElementById("news");
+            newsContainer.innerHTML = "";
+            
+            articles.forEach(article => {
+                const newsItem = document.createElement("div");
+                newsItem.classList.add("news-item");
+                newsItem.innerHTML = `
+                    <h2>${article.title}</h2>
+                    <p>${article.description || "No description available."}</p>
+                    <a href="${article.url}" target="_blank">Read more</a>
+                `;
+                newsContainer.appendChild(newsItem);
+            });
+        }
+    </script>
+</body>
+</html>
